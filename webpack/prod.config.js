@@ -61,6 +61,7 @@ module.exports = {
     ].concat(process.env.ANALYZER ? new BundleAnalyzerPlugin() : []),
 
     module: {
+        noParse: common.module.noParse,
         rules: [
             common.jsLoader,
             common.fileLoader,
