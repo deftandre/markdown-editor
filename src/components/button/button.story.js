@@ -11,6 +11,10 @@ stories.addDecorator((story) => (
 ));
 
 stories.add("Button success", () => (
+    <Button onClick={action("success")}>Default button</Button>
+));
+
+stories.add("Button success", () => (
     <Button onClick={action("success")} kind="success">
         Success
     </Button>

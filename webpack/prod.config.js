@@ -7,6 +7,7 @@ const HtmlPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CleanPlugin = require("clean-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
     entry: common.entry,
@@ -33,7 +34,7 @@ module.exports = {
             chunks: ["main"],
             minChunks: ({ resource }) =>
                 /node_modules\/(react(-dom)?|fbjs)\//.test(resource) ||
-                /node_modules\/preact(-compat)?\//.test(resource),
+                /node_modules\/preact/.test(resource),
         }),
 
         new webpack.optimize.CommonsChunkPlugin({
@@ -55,13 +56,19 @@ module.exports = {
             })
         ),
 
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
+        new UglifyJsPlugin({
+            uglifyOptions: {
+                compress: {
+                    warnings: false,
+                },
+                sourceMap: true,
+            },
         }),
     ].concat(process.env.ANALYZER ? new BundleAnalyzerPlugin() : []),
 
     module: {
         noParse: common.module.noParse,
+
         rules: [
             common.jsLoader,
             common.fileLoader,
@@ -74,8 +81,6 @@ module.exports = {
             }),
         ],
     },
-
-    // resolve: common.resolve
 
     resolve: {
         alias: Object.assign({}, common.resolve.alias, {
